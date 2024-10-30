@@ -1,0 +1,4 @@
+loguru
+aiohttp
+fastapi
+uvicorn[standard]

@@ -10,18 +10,18 @@ This universal API relay will work with any http POST request.
 
 ## Setup
 
-```bash
+```shell
 pip install -r requirements.txt
 ```
 
 ## Usage
 
-```bash
+```shell
 bash run.sh
 ```
 
 Or you can build a Docker image and run it on some server
 
-```bash
+```shell
 bash build_docker.sh [image-name]
 ```

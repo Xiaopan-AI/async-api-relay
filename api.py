@@ -14,6 +14,12 @@ async def post_async(
     params: dict,
     data: dict
 ):
+    if headers:
+        # Just clean up and use only the "User-Agent" and "Content-Type" headers
+        headers = {
+            "User-Agent": headers.get("user-agent", "Apifox/1.0.0 (https://apifox.com)"),
+            "Content-Type": headers.get("content-type", "application/json")
+        }
     if not url.startswith("http"):
         attempts = [f"https://{url}", f"http://{url}"]
     for try_url in attempts:
@@ -21,7 +27,7 @@ async def post_async(
             logger.debug(f"[{task_id}] Sending request to {try_url} with headers: {headers}, params: {params}, data: {data}")
             timeout = aiohttp.ClientTimeout(total=15)
             async with aiohttp.ClientSession(timeout=timeout) as session:
-                async with session.post(try_url, headers=headers, params=params, data=json.dumps(data)) as response:
+                async with session.post(try_url, headers=headers, params=params, json=data) as response:
                     if response.status != 200:
                         logger.error(f"[{task_id}] Request failed with status code {response.status} and reason: {response.reason}")
                         return

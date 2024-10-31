@@ -14,16 +14,22 @@ async def post_async(
     params: dict,
     data: dict
 ):
-    logger.debug(f"[{task_id}] Sending request to {url} with headers: {headers}, params: {params}, data: {data}")
-    timeout = aiohttp.ClientTimeout(total=15)
-    async with aiohttp.ClientSession(timeout=timeout) as session:
-        async with session.post(url, headers=headers, params=params, data=json.dumps(data)) as response:
-            if response.status != 200:
-                logger.error(f"[{task_id}] Request failed with status code {response.status} and reason: {response.reason}")
-                return
-            response_json = await response.json()
-            logger.info(f"[{task_id}] Request successful with response: {response_json}")
-            return
+    if not url.startswith("http"):
+        attempts = [f"https://{url}", f"http://{url}"]
+    for try_url in attempts:
+        try:
+            logger.debug(f"[{task_id}] Sending request to {try_url} with headers: {headers}, params: {params}, data: {data}")
+            timeout = aiohttp.ClientTimeout(total=15)
+            async with aiohttp.ClientSession(timeout=timeout) as session:
+                async with session.post(try_url, headers=headers, params=params, data=json.dumps(data)) as response:
+                    if response.status != 200:
+                        logger.error(f"[{task_id}] Request failed with status code {response.status} and reason: {response.reason}")
+                        return
+                    response_json = await response.json()
+                    logger.info(f"[{task_id}] Request successful with response: {response_json}")
+                    return
+        except:
+            continue
         
 @app.get("/")
 async def root():

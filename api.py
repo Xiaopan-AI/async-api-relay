@@ -22,6 +22,8 @@ async def post_async(
         }
     if not url.startswith("http"):
         attempts = [f"https://{url}", f"http://{url}"]
+    else:
+        attempts = [url]
     for try_url in attempts:
         try:
             logger.debug(f"[{task_id}] Sending request to {try_url} with headers: {headers}, params: {params}, data: {data}")

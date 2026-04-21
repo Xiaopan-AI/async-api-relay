@@ -11,5 +11,4 @@ if [ -z "$IMAGE_NAME" ]; then
     exit 1
 fi
 
-git archive -v -o __api.tar.gz --format=tar.gz HEAD
 docker build -t $IMAGE_NAME -f Dockerfile .
